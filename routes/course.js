@@ -11,6 +11,7 @@ router.get('/search', searchVideoUsingRegEx);
 router.get('/recommended', verifyUser, getRecommendedCourse);
 router.get("/:id/:videoIndex", verifyUser, sendingVideoIndex)
 router.get('/:id', verifyUser, getWithoutVideos);
+
 // post routes
 router.post('/upload', verifyUser, upload.array('files'), uploadVideo);
 

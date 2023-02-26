@@ -20,7 +20,7 @@ require('dotenv').config();
 app.use(bodyParser.json({limit: "30mb", extended: true}));
 app.use(bodyParser.urlencoded({limit: "30mb", extended: true}));
 app.use(cors({
-    origin: ["http://localhost:3000", "https://course-making-and-buying-application-major-project-mihir-vir.vercel.app/"],
+    origin:  "https://course-making-and-buying-application-major-project-mihir-vir.vercel.app/",
     credentials: true
 }))
 app.use(cookieParser())
