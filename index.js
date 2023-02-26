@@ -21,6 +21,7 @@ app.use(bodyParser.json({limit: "30mb", extended: true}));
 app.use(bodyParser.urlencoded({limit: "30mb", extended: true}));
 app.use(cors({
     origin:  "*",
+    methods: ["GET", "POST", "DELETE", "PATCH", "PUT"],
     credentials: true
 }))
 app.use(cookieParser())
