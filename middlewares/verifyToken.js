@@ -5,7 +5,7 @@ const verifyToken = (req, res, next) => {
     const token = req.cookies.access_token;
     if (!token) {
         console.log(token);
-        return res.status(400).json("error no token available")
+        return res.status(400).json(errorObj =  {message: "error no token available", token: token});
     }
     jwt.verify(token, process.env.KEY, (err, user) => {
         if (err) {
