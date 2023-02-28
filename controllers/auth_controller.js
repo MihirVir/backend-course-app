@@ -23,14 +23,15 @@ const loginUser = async (req, res) => {
         }
         const token = jwt.sign({email: existingUser.email, id: existingUser._id}, process.env.KEY, {expiresIn: "3d"});
         console.log("cookie = ", token);
-        return res 
+        res 
             .cookie("access_token", token, {
                     httpOnly: true,
                     secure: process.env.KEY,
                     expiresIn:"3d"
             })
-            .status(200)
-            .json(token = {token: token})
+        return res
+                .status(200)
+                .json({existingUser, token});
     } catch (err) {
         console.log(err);
         return res 
