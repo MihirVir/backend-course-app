@@ -19,11 +19,11 @@ require('dotenv').config();
 // middlewares
 app.use(bodyParser.json({limit: "30mb", extended: true}));
 app.use(bodyParser.urlencoded({limit: "30mb", extended: true}));
+app.use(cookieParser())
 app.use(cors({
     origin: ["http://localhost:3000", "http://mihir-major-project-course.netlify.app", "https://mihir-course-app.vercel.app"],
     credentials: true
 }))
-app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'uploads')))
 app.use(express.static(path.join(__dirname, 'templates')))
 
