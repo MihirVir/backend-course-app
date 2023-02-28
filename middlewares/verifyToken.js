@@ -2,11 +2,13 @@ const jwt = require('jsonwebtoken')
 const {createError} = require('./error')
 
 const verifyToken = (req, res, next) => {
-    const token = req.cookies.access_token;
-    console.log("access token = ", token);
-    if (!token) {
+    const authHeader = req.headers['authorization'];
+
+    const token = authHeader && authHeader.split(" ")[1];
+
+    if (token === null) {
         console.log(token);
-        return res.status(400).json(errorObj =  {message: "error no token available", token: token});
+        return res.status(401).json(errorObj =  {message: "error no token available", token: token});
     }
     jwt.verify(token, process.env.KEY, (err, user) => {
         if (err) {
