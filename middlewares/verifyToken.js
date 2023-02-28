@@ -1,6 +1,22 @@
 const jwt = require('jsonwebtoken')
 const {createError} = require('./error')
 const cookieParser = require('cookie-parser');
+const altVerifyToken = async (req, res, next) => {
+    try {
+        const authHeader = req.headers.authorization;
+        if (authHeader) {
+            const token = authHeader.split(" ")[1];
+            jwt.verify(token, process.env.KEY, (err, user) => {
+                if (err) return res.status(403).json({message: "token is not valid"});
+                
+                req.user = user;
+                next();
+            })
+        }
+    } catch (err) {
+
+    }
+} 
 const verifyToken = (req, res, next) => {
     const token = req.signedCookies.access_token;
     console.log("access token = ", token);
@@ -45,5 +61,6 @@ const verifyIsAdmin = (req, res, next) => {
 module.exports = {
     verifyToken,
     verifyUser,
-    verifyIsAdmin
+    verifyIsAdmin,
+    altVerifyToken
 }

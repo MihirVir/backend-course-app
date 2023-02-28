@@ -2,13 +2,13 @@ const express = require('express')
 const router = express.Router();
 const {uploadVideo, removeAllCourses, deleteSpecificVideo, updateCourse, getVideoByTags, searchVideoUsingRegEx, getRecommendedCourse, getWithoutVideos, sendingVideoIndex} = require('../controllers/video_controller');
 const upload = require('../middlewares/multer_config')
-const {verifyIsAdmin, verifyUser} = require('../middlewares/verifyToken');
+const {verifyIsAdmin, verifyUser, altVerifyToken} = require('../middlewares/verifyToken');
 const uploadImage = require('../middlewares/multer_templates_config')
 
 // get routes
 router.get('/tags', getVideoByTags);
 router.get('/search', searchVideoUsingRegEx);
-router.get('/recommended', verifyUser, getRecommendedCourse);
+router.get('/recommended', altVerifyToken, getRecommendedCourse);
 router.get("/:id/:videoIndex", verifyUser, sendingVideoIndex)
 router.get('/:id', verifyUser, getWithoutVideos);
 
