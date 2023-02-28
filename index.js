@@ -23,6 +23,7 @@ app.use(cors({
     origin: ["http://localhost:3000/", "https://www.mihir-major-project.netlify.app/", "https://www.mihir-major-project-course.netlify.app/"],
     methods: ["PUT", "GET", "POST", "DELETE", "PATCH"],
     preflightContinue: false,
+    credentials: true,
     optionsSuccessStatus: 200
 }));
 app.use(cookieParser())
