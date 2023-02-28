@@ -26,10 +26,10 @@ const loginUser = async (req, res) => {
         return res 
                 .cookie("access_token", token, {
                     httpOnly: true,
-                    secure: process.env.KEY
+                    secure: process.env.KEY,
+                    expiresIn:"3d"
                 })
-                .status(200)
-                .json({existingUser, token});
+                .status(200).json(token);
     } catch (err) {
         console.log(err);
         return res 
