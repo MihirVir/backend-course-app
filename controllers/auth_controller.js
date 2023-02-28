@@ -26,7 +26,7 @@ const loginUser = async (req, res) => {
         res 
             .cookie("access_token", token, {
                     httpOnly: true,
-                    secure: process.env.KEY,
+                    secure: true,
                     expiresIn:"3d"
             })
         return res
