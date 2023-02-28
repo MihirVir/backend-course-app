@@ -21,7 +21,9 @@ app.use(bodyParser.json({limit: "30mb", extended: true}));
 app.use(bodyParser.urlencoded({limit: "30mb", extended: true}));
 app.use(cors({
     origin: ["http://localhost:3000/", "https://www.mihir-major-project.netlify.app/", "https://www.mihir-major-project-course.netlify.app/"],
-    methods: ["PUT", "GET", "POST", "DELETE", "PATCH"]
+    methods: ["PUT", "GET", "POST", "DELETE", "PATCH"],
+    preflightContinue: false,
+    optionsSuccessStatus: 200
 }));
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'uploads')))
