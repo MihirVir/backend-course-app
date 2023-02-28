@@ -27,7 +27,7 @@ var corsOption = {
     },
 }
 
-app.use(cors({corsOption, credentials: true, methods: "GET, POST, PUT, PATCH, DELETE", preflightContinue: true}));
+app.use(cors({corsOption, credentials: true, methods: "GET,POST,PUT,PATCH,DELETE", preflightContinue: true}));
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'uploads')))
 app.use(express.static(path.join(__dirname, 'templates')))
