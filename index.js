@@ -19,15 +19,10 @@ require('dotenv').config();
 // middlewares
 app.use(bodyParser.json({limit: "30mb", extended: true}));
 app.use(bodyParser.urlencoded({limit: "30mb", extended: true}));
-let allowList = ["http://localhost:3000/", "https://www.mihir-major-project.netlify.app/", "https://www.mihir-major-project-course.netlify.app/"];
-var corsOption = {
-    origin: function(origin, cb) {
-        var originIsWhitelisted = allowList.indexOf(origin) !== -1;
-        callback(null, originIsWhitelisted);
-    },
-}
-
-app.use(cors({corsOption, credentials: true, methods: "GET,POST,PUT,PATCH,DELETE", preflightContinue: true}));
+app.use(cors({
+    origin: ["http://localhost:3000", "https://mihir-major-project-course.netlify.app"],
+    credentials: true
+}))
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'uploads')))
 app.use(express.static(path.join(__dirname, 'templates')))
