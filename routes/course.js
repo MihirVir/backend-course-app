@@ -10,7 +10,7 @@ router.get('/tags', getVideoByTags);
 router.get('/search', searchVideoUsingRegEx);
 router.get('/recommended', altVerifyToken, getRecommendedCourse);
 router.get("/:id/:videoIndex", verifyUser, sendingVideoIndex)
-router.get('/:id', verifyUser, getWithoutVideos);
+router.get('/:id', altVerifyToken, getWithoutVideos);
 
 // post routes
 router.post('/upload', verifyUser, upload.array('files'), uploadVideo);
