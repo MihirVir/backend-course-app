@@ -13,7 +13,8 @@ const adminRoutes = require('./routes/admin');
 const reviewRoutes = require('./routes/review');
 const couponRoutes = require('./routes/coupon');
 const cartRoutes = require('./routes/cart');
-
+const testRoutes = require('./routes/test');
+const videoRoutes = require('./routes/video.js');
 require('dotenv').config();
 
 // middlewares
@@ -35,7 +36,8 @@ app.use('/admin', adminRoutes);
 app.use('/review', reviewRoutes);
 app.use('/coupon', couponRoutes);
 app.use('/cart', cartRoutes);
-
+app.use('/test', testRoutes);
+app.use('/video', videoRoutes);
 // database config
 const PORT = process.env.PORT || 9000;
 mongoose.set('strictQuery', false);
