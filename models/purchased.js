@@ -7,7 +7,7 @@ const PurchasedSchema = new mongoose.Schema({
     },
     coursesPurchased: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Course"
+        ref: "Test"
     }
 }, {
     timestamps: true

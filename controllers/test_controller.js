@@ -1,33 +1,6 @@
 
 const Test = require('../models/test');
-
-// const TestSchema = new mongoose.Schema({
-//     courseName: {
-//         type: String,
-//         required: true
-//     },
-//     price: {
-//         type: Number,
-//         required: true
-//     },
-//     template: {
-//         type: String,
-//         required: true
-//     },
-//     security: {
-//         type: Boolean,
-//         default: false
-//     },
-//     author: {
-//         type: mongoose.Schema.Types.ObjectId,
-//         ref: "User"
-//     },
-//     tags: {
-//         type: [String]
-//     }
-// }, {
-//     timestamps: true
-// })
+const Video = require('../models/video');
 
 const createTestCourse = async (req, res) => {
     try {
@@ -66,6 +39,26 @@ const createTestCourse = async (req, res) => {
     }
 }
 
+const deleteTestCourse = async (req, res) => {
+    try {
+        const courseId = req.params.id;
+        const userId = req.user.id;
+        const isCourse = await Test.findOneAndDelete({_id: courseId, $match: { author: userId }})
+
+        const deleteVideos = await Video.deleteMany({courseId: courseId});
+        return res
+                .status(200)
+                .json(successObj = {isCourse, deleteVideos,message: "Successfully deleted the course"})
+    } catch (err) {
+        return res
+                .status(500)
+                .json({
+                    message: "Internal Server Error"
+                })
+    }
+}
+
 module.exports = {
-    createTestCourse
+    createTestCourse,
+    deleteTestCourse
 }
