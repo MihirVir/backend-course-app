@@ -135,10 +135,28 @@ const getCourseRecommendation = async (req, res) => {
                 })
     }
 }
+const searchCourseUsingRegExp = async (req, res) => {
+    try {
+        const query = req.query.q;
 
+        const findCourse = await Test.find({courseName: { $regex: query, $options: "i"}}).limit(5);
+
+        return res
+                .status(200)
+                .json(findCourse)
+    } catch (err) {
+        return res
+                .status(500)
+                .json({
+                    message: 'Internal Server Error'
+                })
+    }
+}
 module.exports = {
     createTestCourse,
     deleteTestCourse,
     getSpecificCourse,
-    getAllCourses
+    getAllCourses,
+    getCourseRecommendation,
+    searchCourseUsingRegExp
 }
