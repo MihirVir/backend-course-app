@@ -149,32 +149,40 @@ const getSpecificCourseVideo = async (req, res) => {
 const getSpecficVideoUsingIndex = async (req, res) => {
     try {
         const courseId = req.params.id;
-        const videoIndex = req.params.idx;
+        const videoIndex = req.query.q;
 
         const isCourse = await Test.findById(courseId);
-
         if (!isCourse) {
             return res
                     .status(404)
                     .json({
-                        message: "Internal Server Error"
+                        message: "Course Not Found"
                     });
         }
         const isPurchased = await Purchased.findOne({coursesPurchased: courseId, customer: req.user.id})
+        console.log(isPurchased);
 
-        if (!isPurchased || !isCourse.author) {
+        if (!isPurchased && isCourse.author != req.user.id) {
             return res
                     .status(400)
                     .json({
-                        messag: "Unauthorized access"
+                        message: "Unauthorized access"
                     })
         }
-
-        const getVideos = await Video.findOne({courseId: courseId});
-
+        const getVideos = await Video.findOne({courseId: courseId})
+        
+        if (videoIndex > getVideos.videoName.length) {
+            return res
+                    .status(404)
+                    .json({
+                        message: 'Invalid Video Index'
+                    })
+        }
+        
         const name = getVideos.videoName[videoIndex];
         const title = isCourse.title[videoIndex];
         const path = getVideos.videoPath[videoIndex];
+        console.log(getVideos);
 
         return res
                 .status(200)
