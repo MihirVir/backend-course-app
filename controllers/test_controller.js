@@ -64,7 +64,7 @@ const getSpecificCourse = async (req, res) => {
         const courseId = req.params.id;
         const userId = req.user.id;
         // searching course 
-        const isCourse = await Test.findById(courseId).populate('user');
+        const isCourse = await Test.findById(courseId).populate('author');
         if (!isCourse) {
             return res
                     .status(404)
