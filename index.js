@@ -25,6 +25,7 @@ app.use(cors({
     origin: ["http://localhost:3000", "http://mihir-major-project-course.netlify.app", "https://mihir-course-app.vercel.app"],
     credentials: true
 }))
+// static
 app.use(express.static(path.join(__dirname, 'uploads')))
 app.use(express.static(path.join(__dirname, 'templates')))
 
