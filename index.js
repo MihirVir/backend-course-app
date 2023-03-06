@@ -28,7 +28,8 @@ app.use(cors({
 // static
 app.use(express.static(path.join(__dirname, 'uploads')))
 app.use(express.static(path.join(__dirname, 'templates')))
-
+app.use('/templates', express.static("templates"))
+app.use('/uploads', express.static("uploads"));
 // setting up routes
 app.use('/auth', authRoutes);
 app.use('/course', courseRoutes);
