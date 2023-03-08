@@ -149,7 +149,7 @@ const getSpecificCourseVideo = async (req, res) => {
 const getSpecficVideoUsingIndex = async (req, res) => {
     try {
         const courseId = req.params.id;
-        const videoIndex = req.query.q;
+        const videoIndex = req.params.idx;
 
         const isCourse = await Test.findById(courseId);
         if (!isCourse) {
