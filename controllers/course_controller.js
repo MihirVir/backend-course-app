@@ -178,7 +178,7 @@ const getSpecficVideoUsingIndex = async (req, res) => {
                         message: 'Invalid Video Index'
                     })
         }
-        
+        const videoLen = title.length;
         const name = getVideos.videoName[videoIndex];
         const title = isCourse.title[videoIndex];
         const path = getVideos.videoPath[videoIndex];
@@ -188,6 +188,7 @@ const getSpecficVideoUsingIndex = async (req, res) => {
                 .status(200)
                 .json(
                     videoObj = {
+                        len: videoLen,
                         name: name,
                         title: title,
                         path: path
