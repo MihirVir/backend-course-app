@@ -1,14 +1,24 @@
-const express = require('express');
-const { createTestCourse, getSpecificCourse, deleteTestCourse, getAllCourses, searchCourseUsingRegExp, getCourseRecommendation } = require('../controllers/test_controller');
+const express = require("express");
+const {
+  createTestCourse,
+  getSpecificCourse,
+  deleteTestCourse,
+  getAllCourses,
+  searchCourseUsingRegExp,
+  getCourseRecommendation,
+  getAllCourseCreatedByUser,
+  updateCourseTitle,
+} = require("../controllers/test_controller");
 const router = express.Router();
-const upload = require('../middlewares/multer_templates_config');
-const { altVerifyToken } = require('../middlewares/verifyToken');
+const upload = require("../middlewares/multer_templates_config");
+const { altVerifyToken } = require("../middlewares/verifyToken");
 
-router.get('/', getAllCourses);
+router.get("/", getAllCourses);
 router.get("/search", searchCourseUsingRegExp);
-router.get('/recommendation', getCourseRecommendation);
+router.get("/user", altVerifyToken, getAllCourseCreatedByUser);
+router.get("/recommendation", getCourseRecommendation);
 router.get("/:id", altVerifyToken, getSpecificCourse);
-router.post("/", altVerifyToken,upload.single('template'), createTestCourse);
+router.post("/", altVerifyToken, upload.single("template"), createTestCourse);
 router.delete("/:id", altVerifyToken, deleteTestCourse);
-
+router.put("/:id", altVerifyToken, updateCourseTitle);
 module.exports = router;
