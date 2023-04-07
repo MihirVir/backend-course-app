@@ -1,16 +1,23 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const PurchasedSchema = new mongoose.Schema({
+const PurchasedSchema = new mongoose.Schema(
+  {
     customer: {
-        type: mongoose.Types.ObjectId,
-        ref: "User"
+      type: mongoose.Types.ObjectId,
+      ref: "User",
     },
     coursesPurchased: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Test"
-    }
-}, {
-    timestamps: true
-})
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Test",
+    },
+    author: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
-module.exports = new mongoose.model('Purchased', PurchasedSchema);
+module.exports = new mongoose.model("Purchased", PurchasedSchema);

@@ -1,9 +1,12 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const {getYearDataPurchase} = require('../controllers/dashboard_controller');
-const { verifyUser } = require('../middlewares/verifyToken');
+const {
+  getYearDataPurchase,
+  getNumberOfCourses,
+} = require("../controllers/dashboard_controller");
+const { verifyUser, altVerifyToken } = require("../middlewares/verifyToken");
 
-router.get('/', verifyUser, getYearDataPurchase);
-
+router.get("/", verifyUser, getYearDataPurchase);
+router.get("/count", altVerifyToken, getNumberOfCourses);
 
 module.exports = router;
