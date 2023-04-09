@@ -2,11 +2,12 @@ const Purchased = require("../models/purchased");
 const Review = require("../models/review");
 const Course = require("../models/course");
 const Test = require("../models/test");
+const mongoose = require("mongoose");
 const getYearDataPurchase = async (req, res) => {
   try {
     const userId = req.user.id;
-    console.log("user id = ", userId);
-    const findAllCourses = await Course.find({ author: userId });
+    // console.log("user id = ", userId);
+    const findAllCourses = await Test.find({ author: userId });
 
     if (!findAllCourses) {
       return res.status(404).json({
@@ -30,16 +31,20 @@ const getYearDataPurchase = async (req, res) => {
     let mayCount = 0;
     let juneCount = 0;
     let julyCount = 0;
+    let augustCount = 0;
+    let septCount = 0;
+    let octCount = 0;
+    let novCount = 0;
+    let decCount = 0;
     coursesPurchasedByOthers.forEach((course) => {
       const current = new Date();
       const currentYear = current.getYear();
       const currentMonth = current.getMonth();
 
-      console.log(currentYear);
       // getting course details
       const purchaseDetails = course.createdAt.getYear();
       const purchaseMonth = course.createdAt.getMonth();
-      console.log(purchaseDetails);
+      // console.log(purchaseDetails);
 
       if (currentYear - purchaseDetails === 0) {
         // counting
@@ -49,7 +54,7 @@ const getYearDataPurchase = async (req, res) => {
         monthCount++;
       }
       // setting monthly count for details ig
-      console.log(course.createdAt.getMonth());
+      // console.log(course.createdAt.getMonth());
       if (
         currentYear - purchaseDetails === 0 &&
         course.createdAt.getMonth() === 0
@@ -92,9 +97,10 @@ const getYearDataPurchase = async (req, res) => {
       ) {
         julyCount++;
       }
-      return res.status(200).json({
-        yearCount,
-        monthCount,
+    });
+    return res
+      .status(200)
+      .json([
         janCount,
         febCount,
         marchCount,
@@ -102,8 +108,12 @@ const getYearDataPurchase = async (req, res) => {
         mayCount,
         juneCount,
         julyCount,
-      });
-    });
+        augustCount,
+        septCount,
+        octCount,
+        novCount,
+        decCount,
+      ]);
   } catch (err) {
     console.log(err);
     return res.status(500).json({
@@ -112,21 +122,32 @@ const getYearDataPurchase = async (req, res) => {
   }
 };
 
-// get total number of courses
+// get total number of courses and purchase
 const getNumberOfCourses = async (req, res) => {
   try {
     const user = req.user.id;
     const findCoursesBelongToUser = await Test.find({ author: user });
-    const findTotalNumberOfCoursesSold = await Purchased.find({ author: user });
+    const findTotalNumberOfCoursesSold = await Purchased.find({
+      author: user,
+    }).populate("coursesPurchased");
+    // money earned by selling courses logic
     if (!findCoursesBelongToUser) {
       return res.status(200).json([]);
     }
-    return res
-      .status(200)
-      .json({
-        course: findCoursesBelongToUser,
-        sold: findTotalNumberOfCoursesSold,
+    let totalPrice = 0;
+    if (findTotalNumberOfCoursesSold.length === 0) {
+      totalPrice = findTotalNumberOfCoursesSold.coursesPurchased.price;
+    } else {
+      findTotalNumberOfCoursesSold.forEach((course) => {
+        totalPrice += course.coursesPurchased.price;
       });
+    }
+
+    return res.status(200).json({
+      course: findCoursesBelongToUser,
+      sold: findTotalNumberOfCoursesSold,
+      money: totalPrice,
+    });
   } catch (err) {
     console.log(err);
     return res.status(500).json({
@@ -134,8 +155,57 @@ const getNumberOfCourses = async (req, res) => {
     });
   }
 };
+// get piechart details
+const getPieData = async (req, res) => {
+  try {
+    const userId = req.user.id;
 
+    // get top Four selling courses
+    const getTopSellings = await Purchased.aggregate([
+      {
+        $match: { author: mongoose.Types.ObjectId(userId) },
+      },
+      {
+        $group: {
+          _id: "$coursesPurchased",
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $sort: { count: -1 },
+      },
+      {
+        $limit: 3,
+      },
+    ]);
+    const courseIds = getTopSellings.map((course) => course._id);
+    const populatedCourses = await Purchased.find({
+      coursesPurchased: { $in: courseIds },
+    })
+      .populate("coursesPurchased")
+      .lean();
+
+    const sortedCourses = getTopSellings.map((course) => {
+      const populatedCourse = populatedCourses.find(
+        (populatedCourse) =>
+          String(populatedCourse.coursesPurchased._id) === String(course._id)
+      );
+      return {
+        course: populatedCourse.coursesPurchased,
+        count: course.count,
+      };
+    });
+    //TODO LATER:  return total avg reviews and returned courses
+    return res.status(200).json(sortedCourses);
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({
+      message: "Internal Server Error",
+    });
+  }
+};
 module.exports = {
   getYearDataPurchase,
   getNumberOfCourses,
+  getPieData,
 };
