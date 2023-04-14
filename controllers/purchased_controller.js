@@ -4,7 +4,7 @@ const createPurchased = async (req, res) => {
   try {
     const courseId = req.params.courseId;
     const userId = req.user.id;
-
+    console.log(courseId);
     const findUserPurchasedTheProduct = await Purchased.find({
       customer: userId,
     });
@@ -26,7 +26,7 @@ const createPurchased = async (req, res) => {
       coursesPurchased: courseId,
       author: findingCourse.author,
     });
-
+    console.log(creatingPurchase);
     const savedUserPurchase = await creatingPurchase.save();
 
     return res.status(201).json({

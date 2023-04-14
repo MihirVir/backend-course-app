@@ -135,14 +135,15 @@ const getNumberOfCourses = async (req, res) => {
       return res.status(200).json([]);
     }
     let totalPrice = 0;
+    console.log(findTotalNumberOfCoursesSold);
     if (findTotalNumberOfCoursesSold.length === 0) {
       totalPrice = findTotalNumberOfCoursesSold.coursesPurchased.price;
     } else {
       findTotalNumberOfCoursesSold.forEach((course) => {
-        totalPrice += course.coursesPurchased.price;
+        totalPrice = parseInt(totalPrice + course.coursesPurchased.price);
       });
     }
-
+    console.log(totalPrice);
     return res.status(200).json({
       course: findCoursesBelongToUser,
       sold: findTotalNumberOfCoursesSold,
@@ -196,7 +197,22 @@ const getPieData = async (req, res) => {
       };
     });
     //TODO LATER:  return total avg reviews and returned courses
-    return res.status(200).json(sortedCourses);
+    // 6432c544a6e23feaf3d3ee46
+    console.log(req.user.id);
+    const getAllRatings = await Review.find({
+      author: req.user.id,
+    });
+    let count = 0;
+    let avgRating = 0;
+    getAllRatings.map((item) => {
+      count += item.rating;
+    });
+    getAllRatings.length > 0
+      ? (avgRating = count / getAllRatings.length)
+      : (avgRating = 0);
+    return res
+      .status(200)
+      .json({ sortedCourses: sortedCourses, rating: avgRating.toFixed(1) });
   } catch (err) {
     console.log(err);
     return res.status(500).json({
@@ -204,8 +220,40 @@ const getPieData = async (req, res) => {
     });
   }
 };
+
+const getTotalNumberOfStudents = async (req, res) => {
+  const perPage = 1;
+  const page = req.params.page || 1;
+  try {
+    const user = req.user.id;
+    // finding users who purchased the course
+    const findUsers = await Purchased.find({
+      author: user,
+    })
+      .populate({ path: "customer", select: "username email" })
+      .populate({ path: "coursesPurchased", select: "courseName" })
+      .skip(perPage * page - perPage)
+      .limit(perPage);
+
+    const count = await Purchased.countDocuments({
+      author: user,
+    });
+    return res.status(200).json({
+      users: findUsers,
+      currentPage: page,
+      pages: Math.ceil(count / perPage),
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({
+      message: "Internal Server Error ",
+    });
+  }
+};
+
 module.exports = {
   getYearDataPurchase,
   getNumberOfCourses,
   getPieData,
+  getTotalNumberOfStudents,
 };

@@ -186,10 +186,72 @@ const getSpecficVideoUsingIndex = async (req, res) => {
     });
   }
 };
+const updateVideoTitle = async (req, res) => {
+  const idx = parseInt(req.body.idx);
+  const newTitle = req.body.title;
+  const user = req.user.id;
+  try {
+    const courseId = req.params.id;
+    // finding course
+    const findingCourse = await Test.findById({ _id: courseId, author: user });
+    const updatingCourse = await Test.findByIdAndUpdate(
+      courseId,
+      {
+        $set: { [`title.${idx}`]: newTitle },
+      },
+      {
+        new: true,
+      }
+    );
+    console.log((findingCourse[idx] = newTitle));
+    return res.status(200).json(updatingCourse);
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({
+      message: "Internal Server Error",
+    });
+  }
+};
+const updateVideoAtIndex = async (req, res) => {
+  const video = req.file.filename;
+  console.log(video);
+  const idx = req.body.idx;
+  const courseId = req.params.id;
+  console.log("id", courseId);
+  try {
+    // finding course
+    const findingCourse = await Video.findOne({
+      course: courseId,
+    }).populate("courseId");
+    // if (findingCourse.courseId.author != req.user.id) {
+    //   return res.status(400).json({ message: "Error" });
+    // }
+    const updatingVideos = await Video.findOneAndUpdate(
+      { courseId: courseId },
+      {
+        $set: {
+          [`videoName.${idx}`]: video,
+          [`videoPath.${idx}`]: req.file.path,
+        },
+      },
+      { new: true }
+    );
+
+    // console.log("video: ", updatingVideos);
+    return res.status(200).json(updatingVideos);
+  } catch (err) {
+    console.log("error", err);
+    return res.status(500).send({
+      message: "internal server error",
+    });
+  }
+};
 module.exports = {
   createVideo,
   getAllVideos,
   deleteVideo,
   getSpecificCourseVideo,
   getSpecficVideoUsingIndex,
+  updateVideoTitle,
+  updateVideoAtIndex,
 };
