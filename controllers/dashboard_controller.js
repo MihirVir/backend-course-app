@@ -222,7 +222,7 @@ const getPieData = async (req, res) => {
 };
 
 const getTotalNumberOfStudents = async (req, res) => {
-  const perPage = 1;
+  const perPage = 10;
   const page = req.params.page || 1;
   try {
     const user = req.user.id;
