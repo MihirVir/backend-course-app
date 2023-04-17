@@ -197,7 +197,7 @@ const changePassword = async (req, res) => {
         message: "Not a valid user",
       });
     }
-    // edge cases added
+    // edge cases to be added
     // 1) if user changed their password few days ago (for example 2 days ago)
     //    they cant change their password anymore
     // if (findingUserValid.updatedAt >= currentDate) {

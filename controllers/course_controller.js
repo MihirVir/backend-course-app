@@ -1,5 +1,6 @@
 const Video = require("../models/video");
 const Test = require("../models/test");
+const fs = require("fs/promises");
 const Purchased = require("../models/purchased");
 const createVideo = async (req, res) => {
   try {
@@ -216,18 +217,20 @@ const updateVideoAtIndex = async (req, res) => {
   const video = req.file.filename;
   console.log(video);
   const idx = req.body.idx;
-  const courseId = req.params.id;
-  console.log("id", courseId);
+  const id = req.params.id;
+
   try {
     // finding course
-    const findingCourse = await Video.findOne({
-      course: courseId,
-    }).populate("courseId");
+    const findingCourse = await Video.findOne({ courseId: id }).populate(
+      "courseId"
+    );
     // if (findingCourse.courseId.author != req.user.id) {
     //   return res.status(400).json({ message: "Error" });
     // }
+    console.log(findingCourse);
+    const deletedIndexVideo = await fs.unlink(findingCourse.videoPath[idx]);
     const updatingVideos = await Video.findOneAndUpdate(
-      { courseId: courseId },
+      { courseId: id },
       {
         $set: {
           [`videoName.${idx}`]: video,
