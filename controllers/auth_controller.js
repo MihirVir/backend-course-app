@@ -5,7 +5,7 @@ const nodemailer = require("nodemailer");
 const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
-    const existingUser = await User.findOne({ email });
+    const existingUser = await User.findOne({ email: email });
 
     if (!existingUser) {
       return res.status(404).json({ message: "User Doesn't Exist" });
@@ -45,7 +45,7 @@ const registerUser = async (req, res) => {
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(req.body.password, salt);
 
-    const existingUser = User.find({ email: req.body.email });
+    const existingUser = User.findOne({ email: req.body.email });
     if (existingUser === req.body.email) {
       return res.status(401).json({
         message: "Hey bro user already exists",

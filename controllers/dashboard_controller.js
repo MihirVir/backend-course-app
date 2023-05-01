@@ -135,7 +135,7 @@ const getNumberOfCourses = async (req, res) => {
       return res.status(200).json([]);
     }
     let totalPrice = 0;
-    console.log(findTotalNumberOfCoursesSold);
+
     if (findTotalNumberOfCoursesSold.length === 0) {
       totalPrice = findTotalNumberOfCoursesSold.coursesPurchased.price;
     } else {
@@ -143,7 +143,6 @@ const getNumberOfCourses = async (req, res) => {
         totalPrice = parseInt(totalPrice + course.coursesPurchased.price);
       });
     }
-    console.log(totalPrice);
     return res.status(200).json({
       course: findCoursesBelongToUser,
       sold: findTotalNumberOfCoursesSold,
@@ -179,6 +178,9 @@ const getPieData = async (req, res) => {
         $limit: 3,
       },
     ]);
+    if (getTopSellings.length === 0) {
+      return res.status(200).json([]);
+    }
     const courseIds = getTopSellings.map((course) => course._id);
     const populatedCourses = await Purchased.find({
       coursesPurchased: { $in: courseIds },
@@ -192,13 +194,12 @@ const getPieData = async (req, res) => {
           String(populatedCourse.coursesPurchased._id) === String(course._id)
       );
       return {
-        course: populatedCourse.coursesPurchased,
+        course: populatedCourse ? populatedCourse.coursesPurchased : [],
         count: course.count,
       };
     });
     //TODO LATER:  return total avg reviews and returned courses
     // 6432c544a6e23feaf3d3ee46
-    console.log(req.user.id);
     const getAllRatings = await Review.find({
       author: req.user.id,
     });
@@ -238,6 +239,7 @@ const getTotalNumberOfStudents = async (req, res) => {
     const count = await Purchased.countDocuments({
       author: user,
     });
+
     return res.status(200).json({
       users: findUsers,
       currentPage: page,
