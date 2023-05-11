@@ -6,6 +6,7 @@ const mongoose = require("mongoose");
 const path = require("path");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+// route imports
 const authRoutes = require("./routes/auth");
 const courseRoutes = require("./routes/course");
 const purchaseRoutes = require("./routes/purchase");
@@ -15,6 +16,7 @@ const couponRoutes = require("./routes/coupon");
 const cartRoutes = require("./routes/cart");
 const testRoutes = require("./routes/test");
 const videoRoutes = require("./routes/video.js");
+const newerRoutes = require("./routes/newer");
 const paymentRoutes = require("./routes/payment");
 require("dotenv").config();
 
@@ -32,7 +34,7 @@ app.use(
     credentials: true,
   })
 );
-// static
+// static files
 app.use(express.static(path.join(__dirname, "uploads")));
 app.use(express.static(path.join(__dirname, "templates")));
 app.use("/templates", express.static("templates"));
@@ -48,6 +50,7 @@ app.use("/cart", cartRoutes);
 app.use("/test", testRoutes);
 app.use("/payment", paymentRoutes);
 app.use("/video", videoRoutes);
+app.use("/newer", newerRoutes);
 // database config
 const PORT = process.env.PORT || 9000;
 mongoose.set("strictQuery", false);

@@ -6,6 +6,7 @@ const {
   getSpecificCourseVideo,
   updateVideoTitle,
   updateVideoAtIndex,
+  deleteAllVideos,
 } = require("../controllers/course_controller");
 const router = express.Router();
 const upload = require("../middlewares/multer_config");
@@ -22,4 +23,5 @@ router.put(
   upload.single("video"),
   updateVideoAtIndex
 );
+router.delete("/", deleteAllVideos);
 module.exports = router;

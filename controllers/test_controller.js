@@ -6,7 +6,7 @@ const createTestCourse = async (req, res) => {
     const userId = req.user.id;
     const title = req.body.title.split(",");
     const tags = req.body.tags.split(",");
-    const { courseName, price, security } = req.body;
+    const { courseName, price, security, coupon } = req.body;
     const template = req.file.filename;
     const newCourse = await Test({
       courseName,
@@ -16,6 +16,7 @@ const createTestCourse = async (req, res) => {
       title,
       template,
       author: userId,
+      coupon,
     });
 
     const savedCourse = await newCourse.save();
@@ -41,6 +42,9 @@ const deleteTestCourse = async (req, res) => {
     });
 
     const deleteVideos = await Video.deleteMany({ courseId: courseId });
+    const deletePurchases = await Purchased.deleteMany({
+      coursesPurchased: courseId,
+    });
     return res.status(200).json(
       (successObj = {
         isCourse,
@@ -81,13 +85,11 @@ const getSpecificCourse = async (req, res) => {
     // sending videos
     const courseVideos = await Video.findOne({ courseId: courseId });
 
-    return res.status(200).json(
-      (response = {
-        isCourse,
-        courseVideos,
-        purchased: true,
-      })
-    );
+    return res.status(200).json({
+      isCourse,
+      courseVideos,
+      purchased: true,
+    });
   } catch (err) {
     console.log(err);
     return res.status(500).json({
@@ -178,8 +180,17 @@ const updateCourseTitle = async (req, res) => {
     console.error(err);
   }
 };
+const deleteAllCourses = async (req, res) => {
+  try {
+    await Test.deleteMany();
+    return res.status(200).send({ message: "Deleted" });
+  } catch (err) {
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
 module.exports = {
   createTestCourse,
+  deleteAllCourses,
   deleteTestCourse,
   getSpecificCourse,
   getAllCourses,

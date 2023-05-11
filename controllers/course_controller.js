@@ -137,8 +137,9 @@ const getSpecficVideoUsingIndex = async (req, res) => {
   try {
     const courseId = req.params.id;
     const videoIndex = req.params.idx;
-
+    console.log(courseId);
     const isCourse = await Test.findById(courseId);
+    console.log(isCourse);
     if (!isCourse) {
       return res.status(404).json({
         message: "Course Not Found",
@@ -148,7 +149,7 @@ const getSpecficVideoUsingIndex = async (req, res) => {
       coursesPurchased: courseId,
       customer: req.user.id,
     });
-    console.log(isPurchased);
+    console.log("us one", isPurchased);
 
     if (!isPurchased && isCourse.author != req.user.id) {
       return res.status(400).json({
@@ -249,8 +250,15 @@ const updateVideoAtIndex = async (req, res) => {
     });
   }
 };
+const deleteAllVideos = async (req, res) => {
+  try {
+    await Video.deleteMany();
+    return res.status(200).json({ message: "video deleted" });
+  } catch (err) {}
+};
 module.exports = {
   createVideo,
+  deleteAllVideos,
   getAllVideos,
   deleteVideo,
   getSpecificCourseVideo,
