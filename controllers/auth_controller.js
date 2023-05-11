@@ -227,7 +227,16 @@ const changePassword = async (req, res) => {
     });
   }
 };
-
+const deleteAccount = async (req, res) => {
+  try {
+    const user = req.user.id;
+    const der = await User.findByIdAndDelete(user);
+    return res.status(200).json({ message: "User got deleted" });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ message: "error" });
+  }
+};
 module.exports = {
   loginUser,
   registerUser,
@@ -237,4 +246,5 @@ module.exports = {
   updateAccount,
   forgotPasswordMail,
   changePassword,
+  deleteAccount,
 };

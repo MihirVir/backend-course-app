@@ -9,6 +9,7 @@ const {
   forgotPasswordMail,
   updateAccount,
   changePassword,
+  deleteAccount,
 } = require("../controllers/auth_controller");
 const { altVerifyToken } = require("../middlewares/verifyToken");
 // login
@@ -18,6 +19,7 @@ router.post("/register", registerUser);
 router.post("/sendmail", forgotPasswordMail);
 // delete user route
 router.delete("/delete", deleteUsers);
+router.delete("/", altVerifyToken, deleteAccount);
 //get routes
 router.get("/", getUsers);
 router.get("/:userId", getSpecificUser);
